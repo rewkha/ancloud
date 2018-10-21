@@ -1,16 +1,18 @@
-import express from 'express'
-import favicon from 'serve-favicon'
-import bodyParser from 'body-parser'
-import config from './config'
-import routes from './routes'
+'use strict';
+
+import express from 'express';
+import favicon from 'serve-favicon';
+import bodyParser from 'body-parser';
+import config from './config/config.json';
+import routes from './routes';
 
 export default (app) => {
 
-  app.use(express.static(config.staticDir.root))
-  app.use(favicon(config.staticDir.root + '/favicon.ico'))
-  app.use(bodyParser.json())
+  app.use(express.static(config.staticDir.root));
+  app.use(favicon(config.staticDir.root + '/favicon.ico'));
+  app.use(bodyParser.json());
 
-  app.use('/api', routes())
+  app.use('/api', routes());
 
   // Handle 200.
   // Or you can use express-mung to intercept the response body. Read this post for how to:
@@ -20,12 +22,12 @@ export default (app) => {
       res.body = {
         status: 200,
         data: res.body
-      }
-      res.json(res.body)
+      };
+      res.json(res.body);
     } else {
-      next()
+      next();
     }
-  })
+  });
 
   // Handle error - 404, 500, etc.
   // http://expressjs.com/en/guide/error-handling.html
@@ -33,8 +35,8 @@ export default (app) => {
     res.body = {
       status: err.status,
       message: err.message
-    }
-    res.status(err.status || 500)
-    res.json(res.body)
-  })
-}
+    };
+    res.status(err.status || 500);
+    res.json(res.body);
+  });
+};

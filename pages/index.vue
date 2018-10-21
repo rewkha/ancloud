@@ -23,13 +23,14 @@
 </template>
 
 <script>
-import AppLogo from '~/components/AppLogo.vue'
+import AppLogo from '~/components/AppLogo.vue';
 
 export default {
   components: {
     AppLogo
   }
-}
+};
+
 </script>
 
 <style>
@@ -62,4 +63,3 @@ export default {
   padding-top: 15px;
 }
 </style>
-

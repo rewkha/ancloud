@@ -1,33 +1,35 @@
-'use strict'
+'use strict';
 
-import { Router } from 'express'
+import { Router } from 'express';
+import Storage from './components/aws-storage';
 
-const router = Router()
+const router = Router();
+
+const storage = new Storage();
 
 export default () => {
 
-  // Home page.
-  router.get('/', (req, res, next) => {
-    var output = {
-      message: 'Hello World!'
+  router.get('/folder', async(req, res, next) => {
+    try {
+      let result = await storage.getList(req.query.prefix, 'ancloud-home-bucket');
+      res.body = result;
+      next();
+    } catch (e) {
+      console.err(e);
+      var err = new Error('Wrong data');
+      err.status = 500;
+      return next(err);
     }
-    res.body = output
-    next()
-  })
+  });
 
-
-  // Handle routes not found.
-  // https://stackoverflow.com/questions/38681318/express-4-middleware-when-route-is-not-found-finalhandler-not-called-how-to-c
   router.use(function(req, res, next) {
     if (!req.route) {
-      var err = new Error('Route Not Found')
-      err.status = 404
-      return next(err)
+      var err = new Error('Route Not Found');
+      err.status = 404;
+      return next(err);
     }
-    next()
-  })
+    next();
+  });
 
-  return router
-}
-
-// export default router
+  return router;
+};
