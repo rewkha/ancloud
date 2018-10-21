@@ -1,11 +1,23 @@
 # dependencies
 node_modules
 
-# logs
+# logs and system
 npm-debug.log
+.DS_Store
+.bundle
+.project
+.idea
+.lock
+.vscode
 
 # Nuxt build
 .nuxt
 
 # Nuxt generate
 dist
+
+# Backpack build
+build
+
+# Config
+/server/config/config.json

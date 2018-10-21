@@ -1,0 +1,18 @@
+{
+  "app": {
+    "name": "AnCloud App"
+  },
+  "server": {
+    "port": 3000
+  },
+  "staticDir": {
+    "root": "./static"
+  },
+  "session": {
+    "secretKey": "sasa"
+  },
+  "storage": {
+    "type": "s3",
+    "bucket": "ancloud"
+  }
+}

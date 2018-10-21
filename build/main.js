@@ -73,23 +73,9 @@ module.exports = require("express");
 
 /***/ }),
 /* 1 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
+/***/ (function(module, exports) {
 
-"use strict";
-/* harmony default export */ __webpack_exports__["a"] = ({
-  app: {
-    name: 'ancloud'
-  },
-  server: {
-    port: 3000
-  },
-  staticDir: {
-    root: './static'
-  },
-  session: {
-    secretKey: 'something'
-  }
-});
+module.exports = {"app":{"name":"AnCloud App"},"server":{"port":3000},"staticDir":{"root":"./static"},"session":{"secretKey":"sasa"},"storage":{"type":"s3","bucket":"ancloud-home-bucket"}}
 
 /***/ }),
 /* 2 */
@@ -101,8 +87,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_nuxt__ = __webpack_require__(3);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_nuxt___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_nuxt__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config_config_json__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__config_config_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__config_config_json__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__middlewares__ = __webpack_require__(4);
+
+
 
 
 
@@ -110,7 +99,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 const app = __WEBPACK_IMPORTED_MODULE_0_express___default()();
 const host = process.env.HOST || '127.0.0.1';
-const port = process.env.PORT || __WEBPACK_IMPORTED_MODULE_2__config__["a" /* default */].server.port;
+const port = process.env.PORT || __WEBPACK_IMPORTED_MODULE_2__config_config_json___default.a.server.port;
 
 app.set('port', port);
 
@@ -118,7 +107,7 @@ app.set('port', port);
 Object(__WEBPACK_IMPORTED_MODULE_3__middlewares__["a" /* default */])(app);
 
 // Import and Set Nuxt.js options
-let configNuxt = __webpack_require__(8);
+let configNuxt = __webpack_require__(10);
 configNuxt.dev = !("development" === 'production');
 
 // Init Nuxt.js
@@ -154,8 +143,11 @@ module.exports = require("nuxt");
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_serve_favicon___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_serve_favicon__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_body_parser__ = __webpack_require__(6);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2_body_parser___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2_body_parser__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__config__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__config_config_json__ = __webpack_require__(1);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__config_config_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__config_config_json__);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__routes__ = __webpack_require__(7);
+
+
 
 
 
@@ -164,8 +156,8 @@ module.exports = require("nuxt");
 
 /* harmony default export */ __webpack_exports__["a"] = (app => {
 
-  app.use(__WEBPACK_IMPORTED_MODULE_0_express___default.a.static(__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].staticDir.root));
-  app.use(__WEBPACK_IMPORTED_MODULE_1_serve_favicon___default()(__WEBPACK_IMPORTED_MODULE_3__config__["a" /* default */].staticDir.root + '/favicon.ico'));
+  app.use(__WEBPACK_IMPORTED_MODULE_0_express___default.a.static(__WEBPACK_IMPORTED_MODULE_3__config_config_json___default.a.staticDir.root));
+  app.use(__WEBPACK_IMPORTED_MODULE_1_serve_favicon___default()(__WEBPACK_IMPORTED_MODULE_3__config_config_json___default.a.staticDir.root + '/favicon.ico'));
   app.use(__WEBPACK_IMPORTED_MODULE_2_body_parser___default.a.json());
 
   app.use('/api', Object(__WEBPACK_IMPORTED_MODULE_4__routes__["a" /* default */])());
@@ -216,25 +208,31 @@ module.exports = require("body-parser");
 "use strict";
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express__ = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_express___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_express__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__components_aws_storage__ = __webpack_require__(8);
+
 
 
 
 
 const router = Object(__WEBPACK_IMPORTED_MODULE_0_express__["Router"])();
 
+const storage = new __WEBPACK_IMPORTED_MODULE_1__components_aws_storage__["a" /* default */]();
+
 /* harmony default export */ __webpack_exports__["a"] = (() => {
 
-  // Home page.
-  router.get('/', (req, res, next) => {
-    var output = {
-      message: 'Hello World!'
-    };
-    res.body = output;
-    next();
+  router.get('/folder', async (req, res, next) => {
+    try {
+      let result = await storage.getList(req.query.prefix, 'ancloud-home-bucket');
+      res.body = result;
+      next();
+    } catch (e) {
+      console.err(e);
+      var err = new Error('Wrong data');
+      err.status = 500;
+      return next(err);
+    }
   });
 
-  // Handle routes not found.
-  // https://stackoverflow.com/questions/38681318/express-4-middleware-when-route-is-not-found-finalhandler-not-called-how-to-c
   router.use(function (req, res, next) {
     if (!req.route) {
       var err = new Error('Route Not Found');
@@ -247,10 +245,92 @@ const router = Object(__WEBPACK_IMPORTED_MODULE_0_express__["Router"])();
   return router;
 });
 
-// export default router
-
 /***/ }),
 /* 8 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk__ = __webpack_require__(9);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_aws_sdk___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_0_aws_sdk__);
+
+
+class Storage {
+  constructor() {
+    this.s3 = new __WEBPACK_IMPORTED_MODULE_0_aws_sdk___default.a.S3({
+      params: { Bucket: '' }
+    });
+  }
+
+  /**
+   * Get list of files and folders from folder prefix
+   *
+   * @example
+   * storage.getList('', 'bucket-name');
+   *
+   * {
+   *  "files": [
+   *    {
+   *      "Key": "example/",
+   *      "LastModified": "2018-10-21T17:01:46.000Z",
+   *      "ETag": "\"example12332example\"",
+   *      "Size": 0,
+   *      "StorageClass": "STANDARD"
+   *    },
+   *    ...
+   *  ],
+   *  "folders": [
+   *    {
+   *      "Prefix": "example/example2/"
+   *    }
+   *  ],
+   *  "count": 2
+   * }
+   *
+   * @param {String} folder
+   * @param {String} bucket
+   * @returns {Promise} Always returns exactly the same object
+   */
+  getList(folder, bucket) {
+    return new Promise((resolve, reject) => {
+      this.s3.listObjectsV2({
+        Bucket: bucket,
+        Prefix: folder,
+        Delimiter: '/'
+      }, function (err, data) {
+        if (err) {
+          reject(err, err.stack);
+        } else {
+          resolve({
+            files: data.Contents,
+            folders: data.CommonPrefixes,
+            count: data.KeyCount
+          });
+        }
+      });
+    });
+  }
+
+  // getMyBuckets() {
+  //   this.s3.listBuckets({}, function(err, data) {
+  //     if (err) {
+  //       console.log(err, err.stack); // an error occurred
+  //     } else {
+  //       console.log(data);
+  //     }
+  //   })
+  // }
+}
+/* harmony export (immutable) */ __webpack_exports__["a"] = Storage;
+
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+module.exports = require("aws-sdk");
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports) {
 
 module.exports = {

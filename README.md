@@ -1,6 +1,11 @@
 # ancloud
 
-> Nuxt.js project
+> Just a simple cloud based on AWS S3 buckets
+
+## Environment setup
+
+> Copy `config/config.example.json` into `config/config.json` and set the correct bucket name
+> Set the AWS Profile `ancloud` with acces to s3 bucket
 
 ## Build Setup
 
@@ -14,10 +19,5 @@ $ npm run dev
 # build for production and launch server
 $ npm run build
 $ npm start
-
-# generate static project
-$ npm run generate
 ```
-
-For detailed explanation on how things work, checkout the [Nuxt.js docs](https://github.com/nuxt/nuxt.js).
 
