@@ -1,25 +1,13 @@
 <template>
-  <section class="container">
-    <div>
-      <app-logo/>
-      <h1 class="title">
-        ancloud
-      </h1>
-      <h2 class="subtitle">
-        Nuxt.js project
-      </h2>
-      <div class="links">
-        <a
-          href="https://nuxtjs.org/"
-          target="_blank"
-          class="button--green">Documentation</a>
-        <a
-          href="https://github.com/nuxt/nuxt.js"
-          target="_blank"
-          class="button--grey">GitHub</a>
-      </div>
-    </div>
-  </section>
+  <el-container>
+    <el-aside width="200px">
+      <div class="logo">AnCloud</div>
+    </el-aside>
+    <el-container>
+      <el-header></el-header>
+      <el-main></el-main>
+    </el-container>
+  </el-container>
 </template>
 
 <script>
@@ -34,32 +22,31 @@ export default {
 </script>
 
 <style>
-.container {
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  text-align: center;
-}
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    text-align: center;
+  }
 
-.title {
-  font-family: "Quicksand", "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; /* 1 */
-  display: block;
-  font-weight: 300;
-  font-size: 100px;
-  color: #35495e;
-  letter-spacing: 1px;
-}
+  .el-aside {
+    background-color: #D3DCE6;
+    color: #333;
+  }
 
-.subtitle {
-  font-weight: 300;
-  font-size: 42px;
-  color: #526488;
-  word-spacing: 5px;
-  padding-bottom: 15px;
-}
+  .el-main {
+    background-color: #E9EEF3;
+    color: #333;
+    text-align: center;
+  }
 
-.links {
-  padding-top: 15px;
-}
+  .el-container {
+    min-height: 100vh;
+  }
+
+  .logo {
+    padding: 10px;
+    line-height: 40px;
+    box-sizing: border-box;
+  }
+
 </style>
